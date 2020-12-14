@@ -15,6 +15,7 @@
 from example_interfaces.srv import AddTwoInts
 
 import rclpy
+import random
 
 
 def main(args=None):
@@ -25,13 +26,16 @@ def main(args=None):
     cli = node.create_client(AddTwoInts, 'add_two_ints')
 
     req = AddTwoInts.Request()
-    req.a = 41
-    req.b = 1
+    # req.a = 41
+    # req.b = 1
     while not cli.wait_for_service(timeout_sec=1.0):
         node.get_logger().info('service not available, waiting again...')
 
-    future = cli.call_async(req)
+    # future = cli.call_async(req)
     while rclpy.ok():
+        req.a = random.randrange(10)
+        req.b = random.randrange(10)
+        future = cli.call_async(req)
         # rclpy.spin_once(node)
         rclpy.spin_until_future_complete(node, future)
         if future.done():
