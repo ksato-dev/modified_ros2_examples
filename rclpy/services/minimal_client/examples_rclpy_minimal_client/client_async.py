@@ -32,7 +32,8 @@ def main(args=None):
 
     future = cli.call_async(req)
     while rclpy.ok():
-        rclpy.spin_once(node)
+        # rclpy.spin_once(node)
+        rclpy.spin_until_future_complete(node, future)
         if future.done():
             try:
                 result = future.result()
@@ -42,7 +43,7 @@ def main(args=None):
                 node.get_logger().info(
                     'Result of add_two_ints: for %d + %d = %d' %
                     (req.a, req.b, result.sum))
-            break
+            # break
 
     node.destroy_node()
     rclpy.shutdown()
